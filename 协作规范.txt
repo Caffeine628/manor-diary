@@ -1,0 +1,133 @@
+【庄园日记】协作规范
+
+一、准备工作（每个程序员都要做）
+
+1.注册GitHub账号：打开 github.com，点击Sign up，填信息完成注册。
+
+2.把GitHub用户名发给李天宇，邀请你加入仓库。
+
+3.Git和vscode没安装的自己安装，看一下基本的操作。
+
+二、第一次下载代码到你的电脑（只做一次）
+
+在电脑桌面新建一个文件夹，名字叫 manor-diary。
+
+双击进入这个文件夹，在空白处右键，点击"Git Bash Here"。
+
+在弹出的黑色窗口里输入以下命令：
+git clone https://github.com/Caffeine628/manor-diary.git
+然后按回车，等待完成。
+
+关闭Git Bash窗口。
+
+打开VSCode，点击"打开文件夹"，选择 桌面/manor-diary/manor-diary 这个子文件夹（注意是里面那一层，包含README.md的那个文件夹）。
+
+三、每次开始写代码前
+
+打开VSCode，打开项目文件夹。
+
+按 Ctrl + ` （键盘左上角ESC键下面那个键哈），打开终端。
+
+在终端里输入：
+git pull origin main
+按回车。这一步是把其他程序员最新提交的代码拉到你的电脑上，这样就可以确保你写的不会和别人的冲突。
+
+四、开始写代码
+
+打开 index.html，找到自己负责的div（每个div上面有注释标注谁负责）。
+
+在对应的div里写你的代码。
+
+需要用到的工具函数已经写好：
+切换页面：showPage('页面id')
+存好感度：setAffection('名字', 数值)
+取好感度：getAffection('名字')
+存天数：setDay(数值)
+取天数：getDay()
+存行动力：setActionPoints(数值)
+取行动力：getActionPoints()
+解锁剧情：addUnlockedStory('剧情id')
+获取已解锁列表：getUnlockedStories()
+解锁成就：addUnlockedAchievement('成就id')
+获取已达成列表：getUnlockedAchievements()
+
+页面id列表：
+page-home（首页）
+page-main（大厅主界面）
+page-dialog（对话弹窗）
+page-story（全屏剧情）
+page-tea（泡茶小游戏）
+page-book（书架小游戏）
+page-achievement（成就列表）
+page-save（存档管理）
+page-about（团队介绍）
+page-help（玩法说明）
+
+五、每次写完之后提交代码
+
+在VSCode终端里输入：
+git add .
+按回车。这一步是提交所有修改。
+
+再输入：
+git commit -m "你写了什么功能"
+按回车。注意：提交信息要写清楚做了什么，比如"完成了大厅界面"或"修复了对话弹窗bug"，不要只写"修改"两个字，让别人能看懂。
+
+再输入：
+git push origin main
+按回车。这一步是把代码上传到GitHub。
+
+如果第三步报错，说明有其他人已经提交了新的代码，你需要先执行 git pull origin main 拉取其他人的更新，然后再重新执行 git add . → git commit -m "..." → git push origin main。
+
+六、变量名统一
+
+好感度统一用以下三个变量名：
+杰克好感度：affection_jack
+园丁好感度：affection_emma
+红蝶好感度：affection_michiko
+
+游戏状态统一用以下两个变量名：
+当前天数：current_day
+剩余行动力：action_points
+
+进度记录统一用以下两个变量名（存的是数组）：
+已解锁剧情列表：unlocked_stories
+已达成成就列表：unlocked_achievements
+
+好感度数值范围0到100。unlocked_stories和unlocked_achievements是数组，存的是已解锁的项目id，比如 ['story_jack_20', 'story_emma_50']。
+
+七、每个人负责的页面
+
+程序员A负责：首页（page-home）、大厅主界面（page-main）、玩法说明浮层（page-help）。（这里html里面有个地方好像写错了，不过看到这里应该已经分好工    了，按照分工去找自己对应的部分去做就可以啦）
+程序员B负责：对话弹窗（page-dialog）、全屏剧情播放（page-story）。
+程序员C负责：泡茶小游戏（page-tea）、书架小游戏（page-book）。
+程序员D负责：成就列表（page-achievement）、存档管理（page-save）。
+程序员E负责：团队介绍（page-about）。
+
+八、禁止事项
+
+不要改别人负责的div里面的内容。
+
+不要改公共文件：common.css、main.js、storage.js 这三个文件是共用的，不要随意修改。
+
+不要自己起变量名，统一使用第六条的命名。
+
+提交代码时提交信息不要只写"修改"，写清楚具体做了什么哈。
+
+九、每次写代码的标准流程
+
+打开VSCode，打开项目文件夹。
+
+按 Ctrl + ` 打开终端。
+
+输入 git pull origin main（拉取队友最新代码）。
+
+写你的代码。
+
+输入 git add .
+
+输入 git commit -m "具体说明"。
+
+输入 git push origin main。
+
+就行了，进度在群里同步一下。
