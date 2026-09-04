@@ -1,0 +1,313 @@
+#page-book{
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+     background:
+        radial-gradient(circle at 50% 40%, #b2b2ad 0%, #444141 45%, #040404 100%);
+}
+.bookshelf{
+    position: relative;
+    width: 70%;
+    height: 74%;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    min-width: 650px;
+    min-height: 500px;
+    z-index: 2;
+    border: 14px solid #4b210e;
+    box-shadow:
+        0 18px 0 #321407,
+        0 28px 0 rgba(37, 15, 5, 0.35),
+        18px 20px 0 rgba(55, 24, 8, 0.25),
+        inset 8px 0 0 rgba(255, 191, 101, 0.14),
+        inset -8px 0 0 rgba(35, 12, 3, 0.35);
+     background:repeating-linear-gradient(
+            0deg,
+            rgba(65, 29, 12, 0.08) 0px,
+            rgba(65, 29, 12, 0.08) 3px,
+            transparent 3px,
+            transparent 9px
+        ), linear-gradient(
+            90deg,
+            #6e351b 0%,
+            #9b5529 12%,
+            #7d3e1e 25%,
+            #a45b2c 48%,
+            #71351a 70%,
+            #9a5025 88%,
+            #57270f 100%
+        );
+}
+/* 地面阴影 */
+#page-book::after {
+    content: "";
+    position: absolute;
+    width: 76%;
+    height: 7%;
+    bottom: 9%;
+    background: rgba(40, 20, 10, 0.38);
+    border-radius: 50%;
+    filter: blur(12px);
+    z-index: 0;
+}
+/* 顶部装饰横梁*/
+.top-frame {
+    position: absolute;
+    left: -22px;
+    right: -22px;
+    top: -30px;
+    height: 48px;
+
+    background:repeating-linear-gradient(
+            90deg,
+            rgba(55, 22, 7, 0.16) 0 4px,
+            transparent 4px 15px
+        ),linear-gradient(
+            #a86030,
+            #713319
+        );
+    border: 9px solid #4a1f0c;
+    box-shadow: 0 8px 0 #321307,inset 0 5px 0 rgba(255, 198, 105, 0.2);
+    z-index: 5;
+}
+/* 书架内部 */
+.shelf-interior {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    top: 22px;
+    bottom: 24px;
+    background:linear-gradient(
+            90deg,
+            rgba(45, 18, 5, 0.5),
+            rgba(70, 27, 8, 0.15) 10%,
+            rgba(0,0,0,0.05) 50%,
+            rgba(30, 10, 3, 0.38)
+        ), #3d1c0b;
+    border: 8px solid #56250e;
+    box-shadow:
+        inset 8px 0 0 rgba(20, 8, 2, 0.5),
+        inset -8px 0 0 rgba(20, 8, 2, 0.5);
+    padding: 20px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    z-index: 2;
+}
+/* 书架行 */
+.shelf-row {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 12px 20px 4px;
+    background: linear-gradient(
+            90deg,
+            rgba(0,0,0,0.25),
+            transparent 10%,
+            transparent 90%,
+            rgba(0,0,0,0.25)
+        );
+     border-bottom: 13px solid #5b280f;
+    box-shadow:0 8px 0 #351507,
+        inset 0 8px 0 rgba(0,0,0,0.14);
+}
+/* 书架行底部木板 */
+.shelf-row::after {
+    content: "";
+    position: absolute;
+    left: -7px;
+    right: -7px;
+    bottom: -19px;
+    height: 17px;
+    background:repeating-linear-gradient(
+            0deg,
+            rgba(55,20,5,0.15) 0 3px,
+            transparent 3px 7px
+        ),linear-gradient(
+            #9b5025,
+            #682c12
+        );
+    border: 4px solid #481d0a;
+    box-shadow: 0 5px 0 #2c1005,
+        inset 0 3px 0 rgba(255,191,101,0.2);
+    z-index: 8;
+}
+.book {
+    position: relative;
+    width: var(--width);
+    height: var(--height);
+    margin-right: 6px;
+    flex-shrink: 0;
+    background:linear-gradient(
+            90deg,
+            rgba(0,0,0,0.3),
+            transparent 25%,
+            rgba(255,255,255,0.08) 60%,
+            rgba(0,0,0,0.25)
+        ),var(--book-color);
+    border-left: 5px solid rgba(0,0,0,0.28);
+    border-right: 3px solid rgba(255,255,255,0.12);
+    box-shadow:
+        4px 0 0 rgba(35, 12, 3, 0.45),
+        -2px 0 0 rgba(255, 199, 108, 0.08);
+    transform-origin: bottom center;
+    image-rendering: pixelated;
+}
+
+/* 书籍颜色*/
+.red {
+    --book-color: #86352c;
+}
+.green {
+    --book-color: #486347;
+}
+.blue {
+    --book-color: #3d5872;
+}
+.yellow {
+    --book-color: #a47734;
+}
+.purple {
+    --book-color: #654b67;
+}
+.brown {
+    --book-color: #754125;
+}
+.dark {
+    --book-color: #3f3b36;
+}
+/* 书架侧边立柱*/
+.side-post {
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    width: 25px;        
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent 0 15px,
+            rgba(52,19,5,0.18) 16px,
+            transparent 19px
+        ),linear-gradient(
+            90deg,
+            #56240d,
+            #9b4f25,
+            #5a250e
+        );
+    border: 5px solid #421a08;
+    box-shadow:
+        inset 5px 0 0 rgba(255,193,99,0.12),
+        5px 0 0 rgba(40,14,4,0.3);
+    z-index: 15;
+}
+.side-post.left {
+    left: 3px;
+}
+.side-post.right {
+    right: 3px;
+}
+/* 底部柜脚 */
+.foot {
+    position: absolute;
+    bottom: -42px;
+    width: 75px;
+    height: 35px;
+    background: #51210b;
+    border: 7px solid #321205;
+    box-shadow:
+        7px 9px 0 rgba(37, 13, 4, 0.5),
+        inset 5px 0 0 rgba(255,180,90,0.1);
+    z-index: 4;
+}
+.foot.left {
+    left: 35px;
+}
+.foot.right {
+    right: 35px;
+}
+/* 书架旁边的横放书堆*/
+.book-stack {
+    position: absolute;
+    left: calc(50% + 29vw);
+    top: 72%;
+    width: 155px;
+    height: 135px;
+    z-index: 10;
+    filter: drop-shadow(8px 12px 0 rgba(45, 18, 6, 0.3));
+}
+/* 每一本横放的书 */
+.lying-book {
+    position: absolute;
+    width: 145px;
+    height: 32px;
+    left: 0;
+    border: 5px solid #321306;
+    image-rendering: pixelated;
+}
+/*书名 */
+.lying-book b {
+    position: absolute;
+    left: 30px;
+    top: 7px;
+    font-family: monospace;
+    font-size: 15px;
+    font-weight: bold;
+    white-space: nowrap;
+    color: #f3d28d;
+    text-shadow:
+        2px 0 #43200c,
+        0 2px #43200c,
+        2px 2px #43200c;
+    letter-spacing: 1px;
+    z-index: 5;
+}
+.book-1 b {  color: #d9c58b;}
+.book-2 b {color: #f0c184;}
+.book-3 b {color: #d4dff0;}
+.book-1 {
+    bottom: 0;
+    left: 10px;
+    height: 35px;
+    background:repeating-linear-gradient(
+            90deg,
+            transparent 0 18px,
+            rgba(255, 213, 137, 0.12) 18px 21px
+        ),linear-gradient(
+            #526f63,
+            #294638
+        );
+    transform: rotate(-3deg);
+}
+.book-2 {
+    bottom: 38px;
+    left: -3px;
+    height: 34px;
+    background:repeating-linear-gradient(
+            90deg,
+            transparent 0 20px,
+            rgba(255, 220, 140, 0.1) 20px 23px
+        ),linear-gradient(
+            #9a4b35,
+            #642719
+        );
+    transform: rotate(2deg);
+}
+.book-3 {
+    bottom: 75px;
+    left: 7px;
+    height: 36px;
+    background:repeating-linear-gradient(
+            90deg,
+            transparent 0 17px,
+            rgba(255, 220, 140, 0.1) 17px 20px
+        ),linear-gradient(
+            #596c91,
+            #303d61
+        );
+    transform: rotate(-1deg);
+}
+
