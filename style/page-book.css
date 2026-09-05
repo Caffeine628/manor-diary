@@ -39,6 +39,34 @@
             #9a5025 88%,
             #57270f 100%
         );
+    image-rendering: pixelated;
+}
+/*木头纹理*/
+.wood-grain {
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        repeating-linear-gradient(
+            7deg,
+            transparent 0px,
+            transparent 23px,
+            rgba(49, 20, 7, 0.18) 24px,
+            transparent 27px
+        ),
+        repeating-linear-gradient(
+            -3deg,
+            transparent 0px,
+            transparent 39px,
+            rgba(255, 185, 91, 0.09) 40px,
+            transparent 44px
+        );
+
+    mix-blend-mode: multiply;
+
+    z-index: 20;
 }
 /* 地面阴影 */
 #page-book::after {
@@ -71,6 +99,32 @@
     border: 9px solid #4a1f0c;
     box-shadow: 0 8px 0 #321307,inset 0 5px 0 rgba(255, 198, 105, 0.2);
     z-index: 5;
+}
+.top-frame::before,
+.top-frame::after {
+    content: "";
+
+    position: absolute;
+
+    top: 11px;
+
+    width: 13px;
+    height: 13px;
+
+    background: #d28a48;
+
+    border: 3px solid #51230e;
+
+    box-shadow:
+        inset 2px 2px 0 rgba(255,255,255,0.2);
+}
+
+.top-frame::before {
+    left: 16px;
+}
+
+.top-frame::after {
+    right: 16px;
 }
 /* 书架内部 */
 .shelf-interior {
@@ -157,7 +211,54 @@
     transform-origin: bottom center;
     image-rendering: pixelated;
 }
+/* 书脊装饰 */
+.book::before {
+    content: "";
 
+    position: absolute;
+
+    left: 5px;
+    right: 4px;
+
+    top: 12px;
+
+    height: 5px;
+
+    background: rgba(255, 211, 133, 0.45);
+
+    box-shadow:
+        0 5px 0 rgba(60, 20, 5, 0.3),
+        0 calc(var(--height) - 34px) 0 rgba(255, 205, 122, 0.25);
+}
+
+/* 书名装饰 */
+.book::after {
+    content: "";
+
+    position: absolute;
+
+    width: 55%;
+    height: 20%;
+
+    left: 22%;
+    top: 40%;
+
+    border-top: 3px solid rgba(255, 215, 143, 0.35);
+    border-bottom: 3px solid rgba(255, 215, 143, 0.2);
+}
+
+/* 不同倾斜角度 */
+.book:nth-child(3n) {
+    transform: rotate(-1.5deg);
+}
+
+.book:nth-child(4n) {
+    transform: rotate(1.5deg);
+}
+
+.book:nth-child(5n) {
+    transform: rotate(-0.5deg);
+}
 /* 书籍颜色*/
 .red {
     --book-color: #86352c;
@@ -229,6 +330,19 @@
 .foot.right {
     right: 35px;
 }
+.pixel-highlight {
+    position: absolute;
+
+    left: 13px;
+    top: 13px;
+
+    width: 7px;
+    height: 45%;
+
+    background: rgba(255, 215, 145, 0.15);
+
+    z-index: 25;
+}
 /* 书架旁边的横放书堆*/
 .book-stack {
     position: absolute;
@@ -246,6 +360,11 @@
     height: 32px;
     left: 0;
     border: 5px solid #321306;
+     /*书的立体侧面*/
+    box-shadow:
+        7px 7px 0 #351407,
+        inset 0 5px 0 rgba(255, 215, 150, 0.18),
+        inset 0 -5px 0 rgba(40, 12, 3, 0.25);
     image-rendering: pixelated;
 }
 /*书名 */
@@ -268,6 +387,26 @@
 .book-1 b {  color: #d9c58b;}
 .book-2 b {color: #f0c184;}
 .book-3 b {color: #d4dff0;}
+.lying-book span {
+    position: absolute;
+
+    right: -15px;
+    top: 4px;
+
+    width: 11px;
+    height: 18px;
+
+    background:
+        repeating-linear-gradient(
+            0deg,
+            #e7c98c 0px,
+            #e7c98c 2px,
+            #a77a43 2px,
+            #a77a43 4px
+        );
+
+    border-right: 4px solid #4a200b;
+}
 .book-1 {
     bottom: 0;
     left: 10px;
@@ -309,5 +448,138 @@
             #303d61
         );
     transform: rotate(-1deg);
+}
+@media (max-width: 800px) {
+
+    .bookshelf {
+        width: 90vw;
+        height: 72vh;
+
+        min-width: 0;
+        min-height: 0;
+
+        border-width: 9px;
+    }
+
+    .shelf-interior {
+        left: 13px;
+        right: 13px;
+        top: 15px;
+        bottom: 15px;
+
+        padding: 12px 8px;
+    }
+
+    .shelf-row {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .book {
+        margin-right: 3px;
+    }
+
+    .top-frame {
+        left: -15px;
+        right: -15px;
+    }
+}
+/* 小屏幕适配 */
+
+@media (max-width: 900px) {
+
+    .book-stack {
+        left: 72%;
+        top: 78%;
+
+        transform: scale(0.75);
+        transform-origin: left top;
+    }
+}
+.lying-book {
+    cursor: grab;
+
+    user-select: none;
+
+    touch-action: none;
+
+    transition:
+        box-shadow 0.15s,
+        filter 0.15s;
+}
+.lying-book.dragging {
+    cursor: grabbing;
+
+    z-index: 1000;
+
+    /*
+       拖动时取消原来的旋转，
+       避免 transform 导致鼠标位置偏移
+    */
+    transform: none !important;
+
+    filter:
+        brightness(1.15)
+        drop-shadow(10px 14px 0 rgba(30, 10, 3, 0.35));
+
+    box-shadow:
+        8px 8px 0 #351407,
+        0 0 0 3px rgba(255, 215, 140, 0.2),
+        inset 0 5px 0 rgba(255, 215, 150, 0.18);
+}
+/* 错误弹回*/
+
+.lying-book.returning {
+    animation: bookReturn 0.45s ease;
+}
+
+@keyframes bookReturn {
+
+    0% {
+        transform: translate(
+            var(--error-x),
+            var(--error-y)
+        ) rotate(0deg);
+    }
+
+    40% {
+        transform: translate(
+            calc(var(--error-x) * -0.12),
+            calc(var(--error-y) * -0.12)
+        ) rotate(3deg);
+    }
+
+    70% {
+        transform: translate(
+            calc(var(--error-x) * 0.05),
+            calc(var(--error-y) * 0.05)
+        ) rotate(-2deg);
+    }
+
+    100% {
+        transform: translate(0, 0) rotate(0);
+    }
+}
+
+
+/* 正确归位动画*/
+
+.lying-book.correct {
+    animation: bookCorrect 0.35s ease-out;
+}
+
+@keyframes bookCorrect {
+
+    0% {
+        transform: scale(1.08);
+    }
+
+    60% {
+        transform: scale(0.96);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
