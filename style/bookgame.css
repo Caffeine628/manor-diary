@@ -1,3 +1,18 @@
+:root {
+    --color-primary: #2D1F14;
+    --color-secondary: #F5EDE3;
+    --color-accent: #E8A87C;
+    --color-pink: #F5CDCD;
+    --font-title: Georgia, serif;
+    --font-body: system-ui, sans-serif;
+}
+
+/* ===== 页面容器 ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-body); background: var(--color-primary); color: var(--color-secondary); width: 100vw; height: 100vh; .page { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; }}
+.page-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: center; }
+
+
 #page-book{
     overflow: hidden;
     display: flex;
@@ -6,13 +21,21 @@
      background:
         radial-gradient(circle at 50% 40%, #b2b2ad 0%, #444141 45%, #040404 100%);
 }
+ .scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  object-fit: cover;          /* 铺满与参考图一致的舞台，不变形 */
+
+}
 .bookshelf{
     position: relative;
     width: 70%;
     height: 74%;
-    top:50%;
-    left:50%;
-    transform: translate(-50%, -50%);
+    top:10%;
     min-width: 650px;
     min-height: 500px;
     z-index: 2;
@@ -78,7 +101,7 @@
     background: rgba(40, 20, 10, 0.38);
     border-radius: 50%;
     filter: blur(12px);
-    z-index: 0;
+    z-index: 2;
 }
 /* 顶部装饰横梁*/
 .top-frame {
@@ -211,40 +234,29 @@
     transform-origin: bottom center;
     image-rendering: pixelated;
 }
-/* 书脊装饰 */
-.book::before {
-    content: "";
-
+/* 书脊书名：平时隐藏，鼠标悬停时纵向显示在书脊上 */
+.book::after {
+    content: attr(data-title);     /* 取 HTML 里 data-title 的书名 */
     position: absolute;
-
-    left: 5px;
-    right: 4px;
-
-    top: 12px;
-
-    height: 5px;
-
-    background: rgba(255, 211, 133, 0.45);
-
-    box-shadow:
-        0 5px 0 rgba(60, 20, 5, 0.3),
-        0 calc(var(--height) - 34px) 0 rgba(255, 205, 122, 0.25);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);  /* 让书名垂直、水平都居中 */
+    writing-mode: vertical-rl;     /* 关键：文字从上到下竖排 */
+    color: #fdf3da;
+    font-size: 12px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    text-shadow:
+        1px 0 0 #241208, -1px 0 0 #241208,
+        0 1px 0 #241208, 0 -1px 0 #241208,
+        1px 1px 2px rgba(0, 0, 0, 0.8);  /* 深色描边，保证在深色书脊上也看得清 */
+    opacity: 0;                    /* 平时隐藏 */
+    transition: opacity 0.15s ease;
+    pointer-events: none;
 }
 
-/* 书名装饰 */
-.book::after {
-    content: "";
-
-    position: absolute;
-
-    width: 55%;
-    height: 20%;
-
-    left: 22%;
-    top: 40%;
-
-    border-top: 3px solid rgba(255, 215, 143, 0.35);
-    border-bottom: 3px solid rgba(255, 215, 143, 0.2);
+.book:hover::after {
+    opacity: 1;                    /* 鼠标放上这本书时才显示 */
 }
 
 /* 不同倾斜角度 */
@@ -568,7 +580,7 @@
     animation: bookCorrect 0.35s ease-out;
 }
 
-@keyframes bookCorrect {
+@keyframes bookCorrect{
 
     0% {
         transform: scale(1.08);
@@ -580,6 +592,111 @@
 
     100% {
         transform: scale(1);
-    }
-}
 
+    }}
+/*关卡提示*/
+.hidden { display: none !important; }  /* !important：防止被 #level-complete 的 display:flex 盖掉 */
+#game-hud { position: absolute; top: 4%; left: 50%; transform: translateX(-50%);
+    text-align: center; z-index: 50; color: #f3d28d; }
+#game-hud #level-name { font-size: 20px; margin-bottom: 6px; }
+#game-hud #hint-text { font-size: 15px; background: rgba(20,10,4,.55);
+    padding: 6px 14px; border: 2px solid #4b210e; }
+#level-complete { position: absolute; inset: 0; background: rgba(0,0,0,.55);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 200; color: #f3d28d; }
+#level-complete button { margin-top: 18px; padding: 8px 26px; font-size: 16px;
+    background: #a86030; color: #fff; border: 3px solid #4a1f0c; cursor: pointer; }
+/*第二关*/
+.book.selected { outline: 3px solid #ffd97a; filter: brightness(1.3); }
+#confirm-btn, #clear-btn { margin-top: 10px; padding: 6px 18px; cursor: pointer;
+    background: #a86030; color: #fff; border: 3px solid #4a1f0c; }
+/*第三关*/
+.book.picked { outline: 3px dashed #fff; filter: brightness(1.4); }
+/*第二关按钮组*/
+#level-actions { margin-top: 10px; }
+#level-actions button + button { margin-left: 10px; }
+/*通用提示 toast*/
+#toast {
+    position: fixed;
+    top: 13%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 500;
+    padding: 8px 18px;
+    background: #241409;
+    color: #ffd97a;
+    border: 2px solid #4b210e;
+    font-size: 15px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+#toast.show { opacity: 1; }
+/*通关弹层按钮组：普通通关显示“下一关”，全通显示“重新开始/退出”*/
+#final-actions { margin-top: 18px; }
+#final-actions button + button { margin-left: 14px; }
+/*左上角常驻退出按钮*/
+#quit-btn {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 600;
+    padding: 6px 16px;
+    font-size: 14px;
+    color: #fff;
+    background: linear-gradient(#a86030, #713319);
+    border: 3px solid #4a1f0c;
+    box-shadow: 0 4px 0 #321307;
+    cursor: pointer;
+}
+#quit-btn:hover { filter: brightness(1.15); }
+#quit-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #321307; }
+/*开场介绍弹窗*/
+#intro-modal {
+    position: absolute;
+    inset: 0;
+    z-index: 400;
+    background: rgba(10, 5, 2, 0.66);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.intro-panel {
+    width: min(560px, 88vw);
+    background: linear-gradient(#3a2415, #241409);
+    border: 4px solid #4b210e;
+    box-shadow: 0 12px 0 rgba(20, 8, 2, 0.55);
+    padding: 26px 32px 24px;
+    color: #f3d28d;
+    text-align: center;
+}
+.intro-panel h2 {
+    font-size: 25px;
+    color: #e8a87c;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+}
+.intro-panel p {
+    font-size: 15px;
+    line-height: 1.9;
+    margin-bottom: 8px;
+}
+.intro-panel ul {
+    text-align: left;
+    font-size: 14px;
+    line-height: 2.1;
+    margin: 6px 0 20px 24px;
+}
+#start-btn {
+    padding: 10px 36px;
+    font-size: 17px;
+    letter-spacing: 2px;
+    color: #fff;
+    background: linear-gradient(#a86030, #713319);
+    border: 3px solid #4a1f0c;
+    box-shadow: 0 5px 0 #321307;
+    cursor: pointer;
+}
+#start-btn:hover { filter: brightness(1.15); }
+#start-btn:active { transform: translateY(2px); box-shadow: 0 3px 0 #321307; }

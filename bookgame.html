@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>书架小游戏</title>
+    <link rel="stylesheet" href="style/bookgame.css">
+</head>
+<body>
+
+    <!-- ===== 程序员C负责：书架小游戏 ===== -->
+    <div id="page-book" class="page-overlay" >
+        <img class="scene" src="bookbackground.png" alt="书架背景" />
+        <!-- 程序员C填写 -->
+       <!-- 书架旁边的三本横放书 -->
+        <div class="book-stack">
+            <div class="lying-book book-1" id="book1">
+                <span></span>
+                <b>骆驼祥子</b>
+            </div>
+            <div class="lying-book book-2" id="book2">
+                <span></span>
+                <b>上帝掷骰子吗</b>
+            </div>
+            <div class="lying-book book-3" id="book3">
+                <span></span>
+                <b>苏菲的世界</b>
+            </div>
+        </div>
+        <div class="bookshelf">
+        <!-- 木质纹理 -->
+        <div class="wood-grain"></div>
+        <div class="top-frame"></div>
+        <!-- 左右立柱 -->
+         <div class="side-post left"></div>
+        <div class="side-post right"></div>
+        <!-- 高光 -->
+        <div class="pixel-highlight"></div>
+        <div class="shelf-interior">
+            <!-- 第一层：小说 -->
+            <div class="shelf-row">
+                <div class="book red" data-title="红楼梦" style="--width:42px;--height:87%;"></div>
+                <div class="book blue" data-title="三国演义" style="--width:51px;--height:96%;"></div>
+                <div class="book yellow" data-title="西游记" style="--width:38px;--height:78%;"></div>
+                <div class="book green" data-title="水浒传" style="--width:48px;--height:90%;"></div>
+                <div class="book purple" data-title="活着" style="--width:42px;--height:83%;"></div>
+                <div class="book brown" data-title="围城" style="--width:56px;--height:97%;"></div>
+                <div class="book dark" data-title="百年孤独" style="--width:40px;--height:73%;"></div>
+                <div class="book red" data-title="老人与海" style="--width:47px;--height:91%;"></div>
+            </div>
+            <!-- 第二层：科普书 -->
+            <div class="shelf-row">
+                <div class="book green" data-title="时间简史" style="--width:55px;--height:94%;"></div>
+                <div class="book yellow" data-title="万物简史" style="--width:39px;--height:80%;"></div>
+                <div class="book red" data-title="昆虫记" style="--width:46px;--height:89%;"></div>
+                <div class="book brown" data-title="从一到无穷大" style="--width:60px;--height:98%;"></div>
+                <div class="book blue" data-title="十万个为什么" style="--width:43px;--height:83%;"></div>
+                <div class="book purple" data-title="物种起源" style="--width:49px;--height:92%;"></div>
+                <div class="book green" data-title="自私的基因" style="--width:38px;--height:76%;"></div>
+                <div class="book yellow" data-title="果壳中的宇宙" style="--width:53px;--height:87%;"></div>
+            </div>
+            <!-- 第三层：工具书 -->
+            <div class="shelf-row">
+                <div class="book blue" data-title="新华字典" style="--width:43px;--height:84%;"></div>
+                <div class="book red" data-title="现代汉语词典" style="--width:58px;--height:96%;"></div>
+                <div class="book brown" data-title="辞海" style="--width:41px;--height:77%;"></div>
+                <div class="book green" data-title="牛津词典" style="--width:52px;--height:91%;"></div>
+                <div class="book yellow" data-title="成语词典" style="--width:44px;--height:82%;"></div>
+                <div class="book purple" data-title="中国大百科全书" style="--width:57px;--height:97%;"></div>
+                <div class="book dark" data-title="世界地图册" style="--width:40px;--height:72%;"></div>
+                <div class="book red" data-title="唐诗鉴赏辞典" style="--width:49px;--height:89%;"></div>
+            </div>
+            <!-- 第四层：哲学书 -->
+            <div class="shelf-row">
+                <div class="book brown" data-title="理想国" style="--width:51px;--height:91%;"></div>
+                <div class="book green" data-title="沉思录" style="--width:43px;--height:80%;"></div>
+                <div class="book blue" data-title="存在与时间" style="--width:57px;--height:98%;"></div>
+                <div class="book yellow" data-title="纯粹理性批判" style="--width:40px;--height:75%;"></div>
+                <div class="book red" data-title="中国哲学简史" style="--width:48px;--height:88%;"></div>
+                <div class="book purple" data-title="查拉图斯特拉如是说" style="--width:54px;--height:94%;"></div>
+                <div class="book brown" data-title="道德经" style="--width:42px;--height:81%;"></div>
+                <div class="book green" data-title="庄子" style="--width:50px;--height:90%;"></div>
+            </div>
+        </div>
+        <!-- 书架底部 -->
+        <div class="foot left"></div>
+        <div class="foot right"></div>
+    </div>
+        <button id="quit-btn" title="随时退出游戏">退出</button>
+        <div id="game-hud">
+            <div id="level-name">第一关：整理书架</div>
+            <div id="hint-text">把三本书放回它们该在的层</div>
+            <div id="level-actions">
+                <button id="confirm-btn">确认</button>
+                <button id="clear-btn">清除</button>
+            </div>
+        </div>
+        <div id="level-complete" class="hidden">
+            <p id="complete-text"></p>
+            <button id="next-btn">进入下一关</button>
+            <div id="final-actions" class="hidden">
+                <button id="restart-btn">重新开始</button>
+                <button id="exit-btn">退出</button>
+            </div>
+        </div>
+        <!-- 开场介绍弹窗：进入页面先展示游戏背景与三关说明 -->
+        <div id="intro-modal">
+            <div class="intro-panel">
+                <h2>庄园日记 · 管家的一天</h2>
+                <p>作为庄园的管家，整理书架也是你的日常工作。</p>
+                <p>今天书房乱成一团，有三项工作等着你：</p>
+                <ul>
+                    <li>第一关 · 把散落在外面的三本书放回正确的分类层</li>
+                    <li>第二关 · 按客人的借书要求，从书架里找出正确的书</li>
+                    <li>第三关 · 有几本书被放错了层，把它们一一归位</li>
+                </ul>
+                <button id="start-btn">开始整理</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/bookgame.js"></script>
+</body>
+</html>
