@@ -331,9 +331,9 @@ if (nextBtn) nextBtn.addEventListener("click", () => startLevel(state.level + 1)
 const restartBtn = document.querySelector("#restart-btn");
 if (restartBtn) restartBtn.addEventListener("click", () => startLevel(1));   // 全部通关后重新开始
 const exitBtn = document.querySelector("#exit-btn");
-if (exitBtn) exitBtn.addEventListener("click", () => { window.location.href = "index.html"; });  // 退出回主菜单
+if (exitBtn) exitBtn.addEventListener("click", () => { window.location.href = "index.html#page-main"; });  // 退出回主菜单
 const quitBtn = document.querySelector("#quit-btn");
-if (quitBtn) quitBtn.addEventListener("click", () => { window.location.href = "index.html"; });  // 左上角随时退出
+if (quitBtn) quitBtn.addEventListener("click", () => { window.location.href = "index.html#page-main"; });  // 左上角随时退出
 
 // 开场介绍弹窗：点“开始整理”后才进入第一关
 const introModal = document.querySelector("#intro-modal");

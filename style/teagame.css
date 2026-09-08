@@ -1,0 +1,459 @@
+
+:root {
+  /* 木质 / 纸张主题 */
+  --wood-dark: #5c351d;
+  --wood: #8b5a2b;
+  --wood-light: #b9824b;
+  --paper: #f5e6c8;
+  --paper-light: #fdf6e4;
+
+  /* 功能色 */
+  --ink: #3a2a1a;                /* 深墨文字 */
+  --ink-soft: #7a633f;           /* 次级文字 */
+  --gold: #d9a441;               /* 锁定金 */
+  --ring: rgba(255, 202, 108, .9);  /* 热点光圈 */
+  --orange: #f0851f;             /* 奉茶可用橙 */
+  --orange-deep: #c9620a;
+  --green-ok: #6fbf73;
+
+  /* 舞台设计尺寸（与参考图一致，JS 用它做缩放） */
+  --stage-w: 1536px;
+  --stage-h: 1024px;
+}
+
+/* ---------- 2. 基础 ---------- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background: #1d1410;
+  font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  overflow: hidden;
+  color: var(--ink);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+button { font-family: inherit; }
+
+/* ============================================================
+   A. 泡茶页全屏容器
+   ============================================================ */
+.game-page { position: fixed; inset: 0; overflow: hidden; z-index: 1; }
+.game-page[hidden] { display: none; }
+
+/* ============================================================
+   B. 泡茶舞台（原背景图）
+   ============================================================ */
+.game-stage {
+  position: absolute; left: 0; top: 0;
+  width: var(--stage-w); height: var(--stage-h);
+  transform-origin: top left;
+  border-radius: 6px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.6);
+  overflow: hidden;
+}
+.scene { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; object-fit: cover; }
+
+/* ---------- 蒸汽（坐标沿用，盖在原图茶壶/茶杯上） ---------- */
+.steam { position: absolute; z-index: 9; pointer-events: none; }
+.steam span {
+  position: absolute; bottom: 0; width: 16px; height: 44px;
+  background: radial-gradient(closest-side, rgba(255,255,255,.9), rgba(255,255,255,0));
+  border-radius: 50%; opacity: 0;
+  animation: steamRise 2.4s ease-in-out infinite;
+}
+.steam-teapot { left: 610px; top: 446px; width: 48px; height: 60px; }
+.steam-teapot span:nth-child(1) { left: 0; animation-delay: 0s; }
+.steam-teapot span:nth-child(2) { left: 16px; animation-delay: .8s; }
+.steam-teapot span:nth-child(3) { left: 32px; animation-delay: 1.6s; }
+.steam-cup { left: 714px; top: 578px; width: 42px; height: 52px; opacity: 0; }
+.steam-cup span:nth-child(1) { left: 0; animation-delay: 0s; }
+.steam-cup span:nth-child(2) { left: 14px; animation-delay: .7s; }
+.steam-cup span:nth-child(3) { left: 28px; animation-delay: 1.4s; }
+@keyframes steamRise {
+  0%   { transform: translateY(0) scale(.7); opacity: 0; }
+  20%  { opacity: .85; }
+  100% { transform: translateY(-46px) scale(1.25); opacity: 0; }
+}
+.steam-teapot span { opacity: .4; }
+.game-stage.serving .steam-cup { opacity: 1; }
+.game-stage.serving .steam-cup span { animation: steamRise 1.6s ease-in-out infinite; }
+
+/* ---------- 茶杯发光 ---------- */
+.cup-glow {
+  position: absolute; left: 700px; top: 596px; width: 116px; height: 134px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,210,120,.35) 0%, rgba(255,210,120,0) 70%);
+  z-index: 7; opacity: 0; transition: opacity .4s ease; pointer-events: none;
+}
+.cup-glow.on { opacity: 1; animation: cupGlow 1.1s ease-in-out infinite alternate; }
+@keyframes cupGlow { from { filter: brightness(.8); } to { filter: brightness(1.35); } }
+
+/* ---------- 选料交互热点（坐标沿用原校准） ---------- */
+.hotspot { position: absolute; z-index: 8; cursor: default; }
+#itemTea   { left: 180px;  top: 452px; width: 138px; height: 192px; }
+#itemSugar { left: 980px;  top: 452px; width: 172px; height: 150px; }
+#itemMilk  { left: 1216px; top: 395px; width: 108px; height: 220px; }
+
+.hotspot-ring {
+  position: absolute; inset: 0;
+  border: 3px solid transparent; border-radius: 18px;
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+/* 轮到该物品：可点击 + 呼吸光圈 */
+.hotspot.clickable { cursor: pointer; }
+.hotspot.next .hotspot-ring {
+  border-color: var(--ring);
+  animation: nextPulse 1.4s ease-in-out infinite;
+}
+@keyframes nextPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,190,90,.5), inset 0 0 20px rgba(255,190,90,.25); background: rgba(255,200,110,.10); }
+  50%      { box-shadow: 0 0 0 16px rgba(255,190,90,0), inset 0 0 28px rgba(255,190,90,.4); background: rgba(255,200,110,.18); }
+}
+.hotspot.clickable:hover .hotspot-ring {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 4px rgba(255,202,108,.22), inset 0 0 26px rgba(255,190,90,.3);
+  background: rgba(255,200,110,.10);
+}
+.hotspot.clickable:active .hotspot-ring { box-shadow: 0 0 0 4px rgba(255,202,108,.4), inset 0 0 30px rgba(255,190,90,.45); }
+/* 已锁定：金色光圈 + 右上角对勾 */
+.hotspot.locked { cursor: default; }
+.hotspot.locked .hotspot-ring {
+  border-color: var(--gold);
+  box-shadow: 0 0 16px rgba(255,205,110,.85), inset 0 0 24px rgba(255,190,90,.3);
+  background: rgba(255,200,110,.14);
+}
+.hotspot-check {
+  position: absolute; top: -14px; right: -14px;
+  width: 30px; height: 30px;
+  background: var(--green-ok); color: #fff;
+  border: 2px solid #fff; border-radius: 50%;
+  font-size: 17px; font-weight: bold;
+  display: none; align-items: center; justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,.4);
+}
+.hotspot.locked .hotspot-check { display: flex; }
+
+/* 引导小气泡（指向当前物品） */
+.tap-hint {
+  position: absolute; z-index: 11;
+  background: rgba(61, 40, 22, .92);
+  color: #ffe9c0;
+  border: 2px solid rgba(255, 214, 140, .8);
+  border-radius: 22px;
+  padding: 6px 14px;
+  font-size: 16px;
+  font-family: "Kaiti SC", "KaiTi", "STKaiti", serif;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: bob .9s ease-in-out infinite alternate;
+}
+.tap-hint::after {
+  content: ""; position: absolute; left: 50%; bottom: -12px;
+  border: 7px solid transparent; border-top-color: rgba(61, 40, 22, .92);
+  transform: translateX(-50%);
+}
+@keyframes bob { from { transform: translateY(0); } to { transform: translateY(5px); } }
+
+/* ============================================================
+   C. 泡茶页 UI
+   ============================================================ */
+.back-btn {
+  position: absolute; left: 24px; top: 22px; z-index: 14;
+  font-size: 17px; letter-spacing: 2px; color: #f7e9c9;
+  background: rgba(46, 30, 16, .78);
+  border: 2px solid rgba(238, 200, 130, .9);
+  border-radius: 26px;
+  padding: 9px 18px 9px 14px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0,0,0,.35);
+  transition: transform .15s ease, background .15s ease;
+}
+.back-btn:hover { transform: scale(1.06); background: rgba(70, 45, 22, .9); }
+.back-btn:active { transform: scale(.95); }
+
+/* ---------- 心情 + 口味偏好卡片 ---------- */
+.mood-card {
+  position: absolute; left: 168px; top: 22px; z-index: 14;
+  display: flex; align-items: center; gap: 14px;
+  background: linear-gradient(180deg, #f8eed4, #f0e2c0);
+  border: 3px solid #b08d5f;
+  border-radius: 16px;
+  padding: 12px 18px;
+  box-shadow: 0 12px 26px rgba(0,0,0,.42);
+  cursor: pointer;                /* 演示：点击切换心情 */
+}
+.mood-card:active { transform: scale(.99); }
+.mood-face {
+  flex: 0 0 auto; width: 52px; height: 52px;
+  background: radial-gradient(circle at 40% 35%, #fff3d6, #f0d9a8);
+  border: 2px solid #a97f45;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px;
+  box-shadow: inset 0 0 0 3px rgba(255,255,255,.5);
+}
+.mood-info { flex: 0 0 auto; }
+.mood-line { font-size: 20px; font-family: "Kaiti SC", "KaiTi", "STKaiti", serif; letter-spacing: 1px; }
+.mood-flavor { font-size: 13px; color: var(--ink-soft); margin-top: 3px; max-width: 220px; line-height: 1.5; }
+.mood-divider { width: 2px; height: 52px; background: #d4b888; flex: 0 0 auto; }
+.need-block { text-align: left; }
+.need-label { font-size: 13px; color: var(--ink-soft); margin-bottom: 6px; letter-spacing: 1px; }
+.need-chips { display: flex; gap: 8px; }
+.need-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: #fff9ec;
+  border: 2px solid #d2a35c;
+  color: #4a3420;
+  border-radius: 20px;
+  font-size: 15px; font-family: "Kaiti SC", "KaiTi", "STKaiti", serif;
+  padding: 3px 12px;
+}
+
+/* ---------- 右上角：尝试次数 ---------- */
+.attempt-chip {
+  position: absolute; right: 26px; top: 22px; z-index: 14;
+  background: rgba(46, 30, 16, .82);
+  color: #ffe9c0;
+  border: 2px solid rgba(238, 200, 130, .9);
+  border-radius: 26px;
+  padding: 8px 20px;
+  font-size: 17px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.35);
+}
+.attempt-chip b { color: #ffd27a; font-size: 20px; margin: 0 2px; }
+
+/* ---------- 右侧：目标角色栏 ---------- */
+.char-panel {
+  position: absolute; right: 26px; top: 78px; z-index: 14;
+  width: 236px;
+}
+.char-title {
+  text-align: center;
+  color: #ffe6bd;
+  font-size: 16px; letter-spacing: 2px;
+  font-family: "Kaiti SC", "KaiTi", "STKaiti", serif;
+  text-shadow: 0 2px 6px rgba(0,0,0,.8);
+  margin-bottom: 8px;
+}
+.char-list { display: flex; flex-direction: column; gap: 9px; }
+.char-card {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(244, 230, 199, .92);
+  border: 3px solid rgba(146, 106, 56, .85);
+  border-radius: 14px;
+  padding: 7px 10px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0,0,0,.3);
+  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  position: relative;
+}
+.char-card:hover { transform: scale(1.04); border-color: #e0b25c; }
+.char-card:active { transform: scale(.97); }
+.char-card.active {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(240,133,31,.45), 0 8px 20px rgba(0,0,0,.4);
+}
+.char-mark {
+  position: absolute; top: -10px; right: -8px;
+  background: linear-gradient(180deg, #ffb25e, var(--orange));
+  color: #fff; font-size: 12px;
+  border: 2px solid #fff; border-radius: 12px;
+  padding: 1px 8px;
+  box-shadow: 0 3px 8px rgba(0,0,0,.35);
+  display: none;
+}
+.char-card.active .char-mark { display: block; }
+/* 头像：插图预留位置（以后把这里换成 <img> 即可） */
+.char-avatar {
+  flex: 0 0 auto; width: 52px; height: 52px;
+  border-radius: 12px;
+  border: 2px dashed #9d7a45;
+  background: #f7ead0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: #8a6f45;
+  position: relative;
+  overflow: hidden;
+}
+.char-avatar .avatar-letter { font-family: "Kaiti SC", "KaiTi", "STKaiti", serif; font-weight: bold; }
+.char-avatar .avatar-tag {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  font-size: 9px; line-height: 1; padding: 2px 0;
+  background: rgba(255, 250, 240, .9);
+  color: #9a7a45;
+}
+.char-text { line-height: 1.35; min-width: 0; }
+.char-name { font-size: 19px; font-family: "Kaiti SC", "KaiTi", "STKaiti", serif; letter-spacing: 1px; }
+.char-desc { font-size: 12px; color: var(--ink-soft); }
+
+/* ---------- 左下：步骤引导卡片 ---------- */
+.guide-card {
+  position: absolute; left: 28px; bottom: 26px; z-index: 14;
+  min-width: 470px; max-width: 560px;
+  background: rgba(50, 33, 18, .9);
+  border: 2px solid rgba(238, 200, 130, .75);
+  border-radius: 14px;
+  padding: 13px 18px;
+  color: #f7e9c9;
+  box-shadow: 0 10px 22px rgba(0,0,0,.4);
+}
+.guide-step { font-size: 18px; font-family: "Kaiti SC", "KaiTi", "STKaiti", serif; letter-spacing: 1px; }
+.guide-step b { color: #ffd27a; }
+.guide-picks { margin-top: 7px; font-size: 14px; color: #ddc9a4; display: flex; gap: 10px; flex-wrap: wrap; }
+.guide-pick {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255, 214, 140, .4);
+  border-radius: 16px; padding: 2px 10px;
+}
+.guide-pick .g-val { color: #fff; }
+.guide-pick.pending .g-val { color: #9d8767; letter-spacing: 2px; }
+.guide-pick.done { border-color: rgba(111, 191, 115, .9); }
+.guide-pick.done .g-val { color: #a9e2a9; }
+
+/* ---------- 奉茶按钮：初始灰色禁用，选齐橙色可用 ---------- */
+.serve-btn {
+  position: absolute; left: 50%; bottom: 34px; transform: translateX(-50%);
+  z-index: 14;
+  font-size: 26px; letter-spacing: 10px; text-indent: 10px;
+  font-family: "Kaiti SC", "KaiTi", "STKaiti", serif;
+  color: #fff7e5;
+  background: linear-gradient(180deg, #cfc9bd, #a7a092);   /* 初始灰色 */
+  border: 3px solid #7c766a;
+  border-radius: 44px;
+  padding: 14px 58px;
+  cursor: not-allowed;
+  box-shadow: 0 8px 16px rgba(0,0,0,.35);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.serve-btn:not(:disabled) {
+  background: linear-gradient(180deg, #ffb25e, var(--orange));
+  border-color: var(--orange-deep);
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(240,133,31,.55);
+  animation: readyGlow 1.6s ease-in-out infinite;
+}
+.serve-btn:not(:disabled):hover { transform: translateX(-50%) scale(1.06); }
+.serve-btn:not(:disabled):active { transform: translateX(-50%) scale(.96); }
+@keyframes readyGlow {
+  0%, 100% { box-shadow: 0 10px 24px rgba(240,133,31,.45); }
+  50%      { box-shadow: 0 12px 34px rgba(240,133,31,.85); }
+}
+
+/* ============================================================
+   D. 选择弹窗
+   ============================================================ */
+.modal-layer {
+  position: absolute; inset: 0; z-index: 20;
+  background: rgba(20, 14, 8, .55);
+  display: none; align-items: center; justify-content: center;
+}
+.modal-layer.show { display: flex; }
+.modal-box {
+  width: 560px;
+  background: linear-gradient(180deg, #f7ecd2, #efe0bd);
+  border: 3px solid #b08d5f;
+  border-radius: 18px;
+  padding: 24px 30px 20px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.5);
+  text-align: center;
+  animation: popIn .22s ease;
+}
+@keyframes popIn { 0% { transform: scale(.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+.modal-title {
+  font-family: "Kaiti SC", "KaiTi", "STKaiti", serif;
+  font-size: 28px; letter-spacing: 3px;
+  margin-bottom: 18px;
+}
+.modal-options { display: flex; flex-direction: column; gap: 11px; }
+.option-btn {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  font-size: 20px; font-family: "Kaiti SC", "KaiTi", "STKaiti", serif;
+  color: var(--ink);
+  background: linear-gradient(180deg, #fffaf0, #f1e5c8);
+  border: 2px solid #b39263;
+  border-radius: 12px;
+  padding: 11px 18px;
+  cursor: pointer;
+  transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
+}
+.option-btn:hover { transform: scale(1.04); border-color: var(--gold); box-shadow: 0 8px 18px rgba(0,0,0,.25); }
+.option-btn:active { transform: scale(.97); }
+.option-btn .opt-desc { font-size: 15px; color: #8a6f45; margin-left: 4px; }
+.option-btn .opt-swatch {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid rgba(0,0,0,.2); flex: 0 0 auto;
+}
+.swatch-tea-black  { background: radial-gradient(circle at 35% 30%, #c57a3a, #8a4a1f); }
+.swatch-tea-green  { background: radial-gradient(circle at 35% 30%, #a8c06a, #718355); }
+.swatch-tea-flower { background: radial-gradient(circle at 35% 30%, #e6b96a, #c8862f); }
+.swatch-sugar-none { background: radial-gradient(circle at 35% 30%, #cfd3d8, #9aa0a8); }
+.swatch-sugar-little{background: radial-gradient(circle at 35% 30%, #efe7d6, #cfc2a4); }
+.swatch-sugar-much { background: radial-gradient(circle at 35% 30%, #fffaf0, #e0d4ba); }
+.swatch-milk-no    { background: radial-gradient(circle at 35% 30%, #9aa0a8, #6a7078); }
+.swatch-milk-yes   { background: radial-gradient(circle at 35% 30%, #fffaf0, #e8dcc6); }
+.modal-close {
+  margin-top: 14px;
+  font-size: 15px; color: #8a6f45;
+  background: none; border: none;
+  cursor: pointer; text-decoration: underline;
+}
+.modal-close:hover { color: var(--ink); }
+
+/* ============================================================
+   E. 结果反馈弹窗（2 秒自动关闭）
+   ============================================================ */
+.result-layer {
+  position: absolute; inset: 0; z-index: 30;
+  background: rgba(20, 14, 8, .6);
+  display: none; align-items: center; justify-content: center;
+}
+.result-layer.show { display: flex; }
+.result-box {
+  width: 520px;
+  background: linear-gradient(180deg, #f7ecd2, #efe0bd);
+  border: 3px solid #b08d5f;
+  border-radius: 20px;
+  padding: 26px 30px 20px;
+  box-shadow: 0 26px 64px rgba(0,0,0,.55);
+  text-align: center;
+  animation: popIn .3s ease;
+}
+.result-emoji { font-size: 54px; line-height: 1; margin-bottom: 4px; }
+.result-title {
+  font-family: "Kaiti SC", "KaiTi", "STKaiti", serif;
+  font-size: 32px; letter-spacing: 3px;
+}
+.result-sub { font-size: 16px; color: var(--ink-soft); margin-top: 8px; }
+.result-rewards {
+  list-style: none;
+  margin: 16px auto 0;
+  display: inline-block;
+  text-align: left;
+}
+.result-rewards li {
+  font-size: 18px; font-family: "Kaiti SC", "KaiTi", "STKaiti", serif;
+  padding: 4px 16px; margin: 4px 0;
+  background: rgba(255, 250, 240, .85);
+  border-radius: 10px;
+  border: 1px solid #d9c08e;
+}
+.result-rewards li b.up { color: #2e9e47; }
+.result-rewards li span.zero { color: #9a8a70; }
+.result-auto { margin-top: 14px; font-size: 13px; color: #9a7a45; }
+
+/* ============================================================
+   F. 完美奖励撒花
+   ============================================================ */
+.sparkle-layer { position: absolute; inset: 0; z-index: 31; pointer-events: none; overflow: hidden; }
+.sparkle {
+  position: absolute; font-size: 30px; opacity: 0;
+  animation: floatUp 2.2s ease-in forwards;
+}
+@keyframes floatUp {
+  0%   { transform: translate(0, 20px) scale(.6) rotate(0); opacity: 0; }
+  25%  { opacity: 1; }
+  100% { transform: translate(var(--dx), -160px) scale(1.1) rotate(var(--rot)); opacity: 0; }
+}
+

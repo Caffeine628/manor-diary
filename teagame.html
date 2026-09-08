@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>奉茶小游戏</title>
+  <link rel="stylesheet" href="style/teagame.css" />
+</head>
+<body>
+
+  <div class="game-page" id="viewTea">
+    <div class="game-stage" id="gameStage">
+
+      <!-- 原背景图（保留不动） -->
+      <img class="scene" src="images/teagame.png" alt="古风茶室茶桌" />
+
+      <!-- 茶壶 / 茶杯蒸汽 + 茶杯发光（奉茶动画用） -->
+      <div class="steam steam-teapot" id="steamTeapot"><span></span><span></span><span></span></div>
+      <div class="steam steam-cup" id="steamCup"><span></span><span></span><span></span></div>
+      <div class="cup-glow" id="cupGlow"></div>
+
+      <!-- ============ 三个选料交互热点（盖在原图的物品上） ============ -->
+      <div class="hotspot" id="itemTea" data-dim="tea" title="点击选择茶叶">
+        <span class="hotspot-ring"></span>
+        <span class="hotspot-check">✓</span>
+      </div>
+      <div class="hotspot" id="itemSugar" data-dim="sugar" title="点击选择糖">
+        <span class="hotspot-ring"></span>
+        <span class="hotspot-check">✓</span>
+      </div>
+      <div class="hotspot" id="itemMilk" data-dim="milk" title="点击选择牛奶">
+        <span class="hotspot-ring"></span>
+        <span class="hotspot-check">✓</span>
+      </div>
+
+      <!-- 引导小气泡：指向当前该点的物品 -->
+      <div class="tap-hint" id="tapHint" hidden></div>
+
+      <!-- ============ 左上角：返回按钮 ============ -->
+      <button class="back-btn" id="backBtn" type="button">← 返回</button>
+
+      <!-- ============ 上方：角色心情 + 口味偏好提示 ============ -->
+      <div class="mood-card" id="moodCard" title="（演示）点击可切换心情">
+        <div class="mood-face" id="moodFace">😊</div>
+        <div class="mood-info">
+          <div class="mood-line" id="moodLine">心情 · 开心</div>
+          <div class="mood-flavor" id="moodFlavor"></div>
+        </div>
+        <div class="mood-divider"></div>
+        <div class="need-block">
+          <div class="need-label">口味偏好提示</div>
+          <div class="need-chips" id="needChips"></div>
+        </div>
+      </div>
+
+      <!-- ============ 右上角：尝试次数 ============ -->
+      <div class="attempt-chip" id="attemptChip">🍵 尝试 <b id="attemptNum">0</b> 次</div>
+
+      <!-- ============ 右侧：目标角色栏（点击切换，头像插图预留） ============ -->
+      <div class="char-panel">
+        <div class="char-title">本次奉茶给？</div>
+        <div class="char-list" id="charList"></div>
+      </div>
+
+      <!-- ============ 左下角：步骤引导 + 已选摘要 ============ -->
+      <div class="guide-card">
+        <div class="guide-step" id="guideStep"></div>
+        <div class="guide-picks" id="guidePicks"></div>
+      </div>
+
+      <!-- ============ 底部中央：奉茶按钮（初始灰色禁用，选齐后橙色启用） ============ -->
+      <button class="serve-btn" id="serveBtn" type="button" disabled>奉茶</button>
+
+      <!-- ============ 选择弹窗 ============ -->
+      <div class="modal-layer" id="modalLayer">
+        <div class="modal-box">
+          <div class="modal-title" id="modalTitle">选择茶叶</div>
+          <div class="modal-options" id="modalOptions"></div>
+          <button class="modal-close" id="modalClose" type="button">取消</button>
+        </div>
+      </div>
+
+      <!-- ============ 结果反馈弹窗（2 秒后自动关闭） ============ -->
+      <div class="result-layer" id="resultLayer">
+        <div class="result-box">
+          <div class="result-emoji" id="resultEmoji">✨</div>
+          <div class="result-title" id="resultTitle">完美！</div>
+          <div class="result-sub" id="resultSub"></div>
+          <ul class="result-rewards" id="resultRewards"></ul>
+          <div class="result-auto" id="resultAuto">2 秒后自动关闭…</div>
+        </div>
+      </div>
+
+      <!-- 完美时撒星星 -->
+      <div class="sparkle-layer" id="sparkleLayer"></div>
+    </div>
+  </div>
+
+  <script src="scripts/teagame.js"></script>
+</body>
+</html>
