@@ -318,22 +318,81 @@ function startLevel(n) {
 }
 
 function finishLevel(msg) {
-    document.querySelector("#complete-text").textContent = msg;
-    const isFinal = (state.level === 3);   // 三关全通后不再有“下一关”
-    document.querySelector("#next-btn").classList.toggle("hidden", isFinal);
-    document.querySelector("#final-actions").classList.toggle("hidden", !isFinal);
-    document.querySelector("#level-complete").classList.remove("hidden");
-}
 
+    document.querySelector("#complete-text").textContent = msg;
+
+    const isFinal = (state.level === 3);
+
+
+    // ========================================================
+    // 三关全部完成
+    // ========================================================
+
+    if (isFinal) {
+
+        // 全局标记：书架小游戏已经通关
+        localStorage.setItem(
+            'bookshelf_completed',
+            'true'
+        );
+
+        console.log('书架小游戏通关！以后所有角色都不能再次触发书架游戏。');
+    }
+
+
+    document.querySelector("#next-btn")
+        .classList.toggle("hidden", isFinal);
+
+    document.querySelector("#final-actions")
+        .classList.toggle("hidden", !isFinal);
+
+    document.querySelector("#level-complete")
+        .classList.remove("hidden");
+}
 // 页面加载完，直接从第一关开始
 const nextBtn = document.querySelector("#next-btn");
 if (nextBtn) nextBtn.addEventListener("click", () => startLevel(state.level + 1));
 const restartBtn = document.querySelector("#restart-btn");
 if (restartBtn) restartBtn.addEventListener("click", () => startLevel(1));   // 全部通关后重新开始
-const exitBtn = document.querySelector("#exit-btn");
-if (exitBtn) exitBtn.addEventListener("click", () => { window.location.href = "index.html#page-main"; });  // 退出回主菜单
-const quitBtn = document.querySelector("#quit-btn");
-if (quitBtn) quitBtn.addEventListener("click", () => { window.location.href = "index.html#page-main"; });  // 左上角随时退出
+// ============================================================
+// 返回大厅并重新打开刚才的角色对话
+// ============================================================
+
+function returnToDialog() {
+    // 退出书架游戏，直接回到大厅
+    window.location.href = 'index.html';
+}
+
+// ============================================================
+// 左上角退出
+// ============================================================
+
+const quitBtn =
+    document.querySelector("#quit-btn");
+
+if (quitBtn) {
+
+    quitBtn.addEventListener(
+        "click",
+        returnToDialog
+    );
+}
+
+
+// ============================================================
+// 最终完成后的退出
+// ============================================================
+
+const exitBtn =
+    document.querySelector("#exit-btn");
+
+if (exitBtn) {
+
+    exitBtn.addEventListener(
+        "click",
+        returnToDialog
+    );
+}
 
 // 开场介绍弹窗：点“开始整理”后才进入第一关
 const introModal = document.querySelector("#intro-modal");

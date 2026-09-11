@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>庄园日记</title>
     <link rel="stylesheet" href="style/common.css">
-    <link rel="stylesheet" href="style/page-book.css">
+   
 </head>
 <body>
 
@@ -36,48 +36,288 @@
 
     <!-- ===== 首页 ===== -->
     <div id="page-home" class="page" style="display:none;">
-        <!-- 填写 -->
+       
+
+     <a href="javascript:void(0)" onclick="showPage('page-about')" id="home-about-link">关于</a>
+
+    <!-- 主内容区域，垂直居中 -->
+    <div id="home-content">
+        <!-- 游戏标题 -->
+        <h1 id="home-title">庄园日记</h1>
+        <!-- 副标题 -->
+        <p id="home-subtitle">庄园里的每一天，都值得被记得...</p>
+        <!-- 欢迎语（显示当前登录用户名） -->
+        <p id="home-welcome">欢迎回来，<span id="home-username"></span> </p>
+        <!-- 进入庄园按钮 -->
+        <button onclick="showPage('page-main')" id="home-enter-btn">进入庄园</button>
+        <!-- 底部小提示 -->
+        <p id="home-hint">数据将保存在此浏览器中</p>
+    </div>
+</div>
+    
+
+   <!-- ===== 大厅主界面 ===== -->
+<div id="page-main" class="page" style="display:none;">
+    <!-- ===== 顶部状态栏 ===== -->
+    <div id="status-bar">
+        <span id="day-display">📅 第 1 天</span>
+
+         <span id="weather-display">☀️ 晴</span>
+        <span id="action-display">❤️ 行动力：6/6</span>
     </div>
 
-    <!-- ===== 大厅主界面 ===== -->
-    <div id="page-main" class="page" style="display:none;">
-        <a href="javascript:void(0)" onclick="showPage('page-about')" style="position:fixed;top:20px;right:30px;color:#F5EDE3;text-decoration:none;font-weight:bold;font-size:50px;">关于我们</a>
-        
-        <!-- 填写 -->
+    <div class="fire-overlay"></div>
+
+    <!-- ===== 三个角色区域 ===== -->
+    <div id="characters">
+        <!-- 杰克 -->
+        <div class="character" onclick="openDetail('jack')">
+    <div class="character-avatar-wrapper">
+        <div class="character-avatar" id="avatar-jack">🎩</div>
+        <span class="mood-icon" id="mood-jack">😐</span>
+        <div class="avatar-glow"></div>
+    </div>
+    <p class="character-name">杰克</p>
+    <div class="progress-bars">
+        <div class="progress-item"><span class="p-label">信任</span><div class="p-track"><div id="trust-jack" style="width:0%;" class="p-fill trust-fill"></div></div></div>
+        <div class="progress-item"><span class="p-label">依赖</span><div class="p-track"><div id="dependency-jack" style="width:0%;" class="p-fill dependency-fill"></div></div></div>
+        <div class="progress-item"><span class="p-label">羁绊</span><div class="p-track"><div id="bond-jack" style="width:0%;" class="p-fill bond-fill"></div></div></div>
+    </div>
+</div>
+
+        <div class="character" onclick="openDetail('emma')">
+    <div class="character-avatar-wrapper">
+        <div class="character-avatar" id="avatar-emma">🎩</div>
+        <span class="mood-icon" id="mood-emma">😐</span>
+        <div class="avatar-glow"></div>
+    </div>
+    <p class="character-name">园丁</p>
+    <div class="progress-bars">
+        <div class="progress-item"><span class="p-label">信任</span><div class="p-track"><div id="trust-emma" style="width:0%;" class="p-fill trust-fill"></div></div></div>
+        <div class="progress-item"><span class="p-label">依赖</span><div class="p-track"><div id="dependency-emma" style="width:0%;" class="p-fill dependency-fill"></div></div></div>
+        <div class="progress-item"><span class="p-label">羁绊</span><div class="p-track"><div id="bond-emma" style="width:0%;" class="p-fill bond-fill"></div></div></div>
+    </div>
+</div>
+        <!-- 红蝶 -->
+      <div class="character" onclick="openDetail('michiko')">
+    <div class="character-avatar-wrapper">
+        <div class="character-avatar" id="avatar-michiko">🎩</div>
+        <span class="mood-icon" id="mood-michiko">😐</span>
+        <div class="avatar-glow"></div>
+    </div>
+    <p class="character-name">红蝶</p>
+    <div class="progress-bars">
+        <div class="progress-item"><span class="p-label">信任</span><div class="p-track"><div id="trust-michiko" style="width:0%;" class="p-fill trust-fill"></div></div></div>
+        <div class="progress-item"><span class="p-label">依赖</span><div class="p-track"><div id="dependency-michiko" style="width:0%;" class="p-fill dependency-fill"></div></div></div>
+        <div class="progress-item"><span class="p-label">羁绊</span><div class="p-track"><div id="bond-michiko" style="width:0%;" class="p-fill bond-fill"></div></div></div>
+    </div>
+</div>
     </div>
 
-    <!-- ===== 对话弹窗 ===== -->
-    <div id="page-dialog" class="page-overlay" style="display:none;">
-        <!-- 填写 -->
+   <!-- 底部导航栏 -->
+<div id="bottom-nav">
+    <div class="nav-btn" onclick="showPage('page-achievement')">
+    <span>成就</span>
+</div>
+<div class="nav-btn" onclick="showPage('page-save')">
+    <span>存档</span>
+</div>
+<div class="nav-btn" onclick="showPage('page-about')">
+    <span>成员</span>
+</div>
+<div class="nav-btn" onclick="showHelp()">
+    <span>玩法说明</span>
+</div>
+ <div class="nav-btn" onclick="resetGame()"><span> 重置</span></div>
+</div>
+
+<!-- 下一天按钮 -->
+<div class="nextday-btn" onclick="nextDay()">
+    <span>下一天</span>
+</div>
+
+</div>
+
+<!-- ===== 角色详情弹窗（编号05） ===== -->
+<div id="page-detail" class="page-overlay" style="display:none;">
+    <div id="detail-card">
+        <button onclick="closeDetail()" id="detail-close">✕</button>
+        <div id="detail-left">
+            <img id="detail-portrait" src="assets/characters/jack_portrait.png" alt="角色立绘">
+        </div>
+        <div id="detail-right">
+            <h2 id="detail-name">杰克</h2>
+            <div id="detail-mood">😐 平静</div>
+            <div id="detail-stage">初识</div>
+            <div class="detail-progress-item">
+                <span class="dp-label">信任</span>
+                <div class="dp-track"><div id="detail-trust" style="width:0%;" class="dp-fill trust-fill"></div></div>
+                <span class="dp-value" id="detail-trust-val">0</span>
+            </div>
+            <div class="detail-progress-item">
+                <span class="dp-label">依赖</span>
+                <div class="dp-track"><div id="detail-dependency" style="width:0%;" class="dp-fill dependency-fill"></div></div>
+                <span class="dp-value" id="detail-dependency-val">0</span>
+            </div>
+            <div class="detail-progress-item">
+                <span class="dp-label">羁绊</span>
+                <div class="dp-track"><div id="detail-bond" style="width:0%;" class="dp-fill bond-fill"></div></div>
+                <span class="dp-value" id="detail-bond-val">0</span>
+            </div>
+            <div id="detail-buttons">
+                <button onclick="openChat()" id="detail-chat-btn" title="走进TA，与TA交换一段心事">走近TA</button>
+                <button onclick="sendGift()" id="detail-gift-btn" title="送TA一份礼物，让彼此更亲近">🎁 送礼物</button>
+            </div>
+        </div>
     </div>
+</div>
+
+<!-- ===== 场景描述页 ===== -->
+<div id="page-scene" class="page-overlay" style="display:none;">
+
+    <div id="scene-left">
+        <img id="scene-portrait" src="assets/characters/jack_portrait.png" alt="角色立绘">
+        <div id="scene-name-tag"></div>
+    </div>
+
+    <div id="scene-right">
+
+        <div id="scene-text-container">
+            <div id="scene-text"></div>
+        </div>
+
+        <button id="scene-next-btn" style="display:none;" onclick="enterDialog()">
+            和他聊一聊 →
+        </button>
+
+        <button id="scene-skip-btn" onclick="skipScene()">
+    跳过
+</button>
+
+    </div>
+
+</div>
+
+    <!-- ===== 对话弹窗（编号06） ===== -->
+<div id="page-dialog" class="page-overlay" style="display:none;">
+    <div id="dialog-card">
+        <button onclick="closeDialog()" id="dialog-close">✕</button>
+        <div id="dialog-left">
+            <img id="dialog-portrait" src="assets/characters/jack_portrait.png" alt="角色立绘">
+        </div>
+        <div id="dialog-right">
+            <div id="dialog-header">
+                <span id="dialog-name">杰克</span>
+                <span id="dialog-stage-tag">初识</span>
+            </div>
+            <div id="dialog-text-container">
+                <p id="dialog-text"></p>
+                <span id="dialog-cursor">|</span>
+            </div>
+            <div id="dialog-continue">点击继续 ▼</div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ===== 分支剧情弹窗（编号07） ===== -->
+<div id="page-branch" class="page-overlay" style="display:none;">
+    <button onclick="closeBranch()" id="branch-close">✕</button>
+    <div id="branch-container">
+        <div id="branch-header">
+            <h2 id="branch-title">杰克的秘密</h2>
+            <span id="branch-stage-label">· 亲密 ·</span>
+        </div>
+        <div id="branch-body">
+            <div id="branch-portrait-area">
+                <img id="branch-portrait" src="assets/characters/jack_portrait.png" alt="角色立绘">
+            </div>
+            <div id="branch-text-area">
+                <div id="branch-text-container">
+                    <p id="branch-text"></p>
+                    <span id="branch-cursor">|</span>
+                </div>
+                <div id="branch-options" style="display:none;"></div>
+            </div>
+        </div>
+        <div id="branch-skip"><span onclick="skipBranch()">跳过</span></div>
+    </div>
+</div>
+
+
 
     <!-- ===== 全屏剧情 ===== -->
-    <div id="page-story" class="page-overlay" style="display:none;">
-        <!-- 填写 -->
-    </div>
+    <div id="page-story" class="page-overlay" style="display:none;"></div>
 
     <!-- ===== 泡茶小游戏 ===== -->
-    <div id="page-tea" class="page-overlay" style="display:none;">
-        <!-- 填写 -->
-    </div>
+    <div id="page-tea" class="page-overlay" style="display:none;"></div>
 
     <!-- ===== 书架小游戏 ===== -->
-    <div id="page-book" class="page-overlay" style="display:none;">
-        <!-- 程序员C填写 -->
-    </div>
+    <div id="page-book" class="page-overlay" style="display:none;"></div>
 
     <!-- ===== 成就列表 ===== -->
+    <div id="achievement-mask" class="feature-mask" style="display:none;" onclick="closeAchievement()"></div>
     <div id="page-achievement" class="page-sidebar" style="display:none;">
-        <!-- 填写 -->
+        <div class="feature-header">
+            <div>🏆 <span>成就</span></div>
+            <button class="feature-close" onclick="closeAchievement()">✕</button>
+        </div>
+        <div id="achievement-progress"></div>
+        <div id="achievement-list"></div>
+        <button class="feature-secondary-btn" onclick="showPage('page-album')">📖 打开纪念图册</button>
     </div>
 
     <!-- ===== 存档管理 ===== -->
     <div id="page-save" class="page" style="display:none;">
-        <!-- 填写 -->
+        <div class="feature-page-shell">
+            <div class="feature-page-header">
+                <div>💾 <span>存档管理</span></div>
+                <button class="feature-back-btn" onclick="showPage('page-main')">返回庄园</button>
+            </div>
+            <p class="feature-page-tip">每个存档槽独立保存当前天数、行动力、三维好感度、剧情、成就、小游戏与结局进度。</p>
+            <div id="save-slot-list" class="save-slot-list"></div>
+        </div>
+    </div>
+
+    <!-- ===== 结局展示 ===== -->
+    <div id="page-ending" class="page-overlay" style="display:none;">
+        <div id="ending-background" class="ending-background"></div>
+        <button id="ending-skip-btn" onclick="finishEndingText()">跳过</button>
+        <div class="ending-card">
+            <div class="ending-kicker">THE END</div>
+            <h1 id="ending-title"></h1>
+            <div id="ending-divider"></div>
+            <p id="ending-text"></p>
+            <div class="ending-actions">
+                <button onclick="showPage('page-album')">查看纪念图册</button>
+                <button class="ending-home-btn" onclick="showPage('page-home')">返回首页</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 纪念图册 ===== -->
+    <div id="page-album" class="page" style="display:none;">
+        <div class="feature-page-shell album-shell">
+            <div class="feature-page-header">
+                <div>🖼 <span>纪念图册</span></div>
+                <button class="feature-back-btn" onclick="showPage('page-main')">返回庄园</button>
+            </div>
+            <p class="feature-page-tip">记录你走过的结局。解锁结局后，可以随时回看对应的故事。</p>
+            <div id="album-grid" class="album-grid"></div>
+            <div id="album-detail" class="album-detail" style="display:none;">
+                <div id="album-detail-image" class="album-detail-image"></div>
+                <div class="album-detail-content">
+                    <div id="album-detail-kicker" class="ending-kicker"></div>
+                    <h2 id="album-detail-title"></h2>
+                    <p id="album-detail-text"></p>
+                    <button onclick="closeAlbumDetail()">返回图册</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ===== 团队介绍 ===== -->
-    <div id="page-about" class="page" style="display:none;">
+    <div id="page-about" class="page">
        <!-- ===== 小组介绍页 ===== -->
 <div id="about-container">
     <div id="about-header">
@@ -150,10 +390,76 @@
         <!-- 填写 -->
     </div>
 
-    <script src="scripts/storage.js"></script>
-    <script src="scripts/main.js"></script>
-    <script src="scripts/dialog.js"></script>
-    <script src="scripts/game.js"></script>
-    <script src="scripts/achievement.js"></script>
+   <script src="scripts/storage.js"></script>
+<script src="scripts/main.js"></script>
+<script src="scripts/dialogData.js"></script>
+<script src="scripts/minigame.js"></script>
+<script src="scripts/dialog.js"></script>
+<script src="scripts/achievement.js"></script>
+<script src="scripts/ending.js"></script>
+
+
+    <script>
+// 对话弹窗点击继续
+document.getElementById('page-dialog').addEventListener('click', function(e) {
+    // 如果点击的是弹窗本身（背景），不触发关闭
+    if (e.target === this) return;
+    continueDialog();
+});
+
+// 键盘空格键继续
+document.addEventListener('keydown', function(e) {
+    if (e.key === ' ' || e.key === 'Space') {
+        var dialog = document.getElementById('page-dialog');
+        if (dialog.style.display === 'flex') {
+            e.preventDefault();
+            continueDialog();
+        }
+    }
+});
+
+
+// ============================================================
+// 从小游戏返回
+// 自动重新打开刚才角色的对话
+// ============================================================
+
+window.addEventListener('load', function() {
+
+    var params =
+        new URLSearchParams(window.location.search);
+
+
+    var returnDialog =
+        params.get('returnDialog');
+
+
+    var character =
+        params.get('character');
+
+
+    if (
+        returnDialog === '1' &&
+        character
+    ) {
+
+        // 清掉 URL 参数
+        window.history.replaceState(
+            {},
+            document.title,
+            'index.html'
+        );
+
+
+        // 等大厅加载完成后打开对话
+        setTimeout(function() {
+
+            openDialog(character);
+
+        }, 300);
+    }
+
+});
+</script>
 </body>
 </html>
